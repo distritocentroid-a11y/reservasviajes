@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Reservas</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+form {
+    background: #ffffff;
+    padding: 30px;
+    width: 90%;
+    max-width: 520px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+}
+
+h2 {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 16px;
+    margin-top: 15px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 18px;
+    margin-top: 25px;
+    font-size: 22px;
+    background: #25D366;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1ebc59;
+}
+
+@media (max-width: 600px) {
+    h2 {
+        font-size: 26px;
+    }
+    input, select {
+        font-size: 20px;
+        padding: 18px;
+    }
+    button {
+        font-size: 24px;
+        padding: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<form id="formulario">
+<h2>Reservar viaje</h2>
+
+<input type="text" id="nombre" placeholder="Nombre completo" required>
+<input type="text" id="cedula" placeholder="Número de cédula" required>
+<input type="text" id="destino" placeholder="Destino" required>
+<select id="habitaciones" required>
+  <option value="">Tipo de habitación</option>
+  <option value="Habitación simple">Habitación simple</option>
+  <option value="Habitación doble">Habitación doble</option>
+  <option value="Habitación triple">Habitación triple</option>
+  <option value="Habitación cuádruple">Habitación cuádruple</option>
+  <option value="Habitación quíntuple">Habitación quíntuple</option>
+</select>
+<select id="pago" required>
+<option value="">Forma de pago</option>
+<option>Efectivo</option>
+<option>Transferencia</option>
+<option>Tarjeta</option>
+</select>
+
+<button type="submit">Reservar por WhatsApp</button>
+</form>
+
+<script>
+document.getElementById("formulario").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let nombre = document.getElementById("nombre").value;
+    let cedula = document.getElementById("cedula").value;
+    let destino = document.getElementById("destino").value;
+    let habitaciones = document.getElementById("habitaciones").value;
+    let pago = document.getElementById("pago").value;
+
+    // MENSAJE WHATSAPP
+    let mensaje = 
+`Hola, quiero reservar un viaje:
+
+Nombre: ${nombre}
+Cédula: ${cedula}
+Destino: ${destino}
+Habitaciones: ${habitaciones}
+Forma de pago: ${pago}`;
+
+    let telefono = "593962725606"; // CAMBIA ESTE NÚMERO
+    window.open("https://wa.me/" + telefono + "?text=" + encodeURIComponent(mensaje));
+
+    // GUARDAR EN EXCEL (CSV)
+    let encabezado = "Nombre,Cédula,Destino,Habitaciones,Forma de Pago\n";
+    let fila = `"${nombre}","${cedula}","${destino}","${habitaciones}","${pago}"\n`;
+
+    let archivo = new Blob([encabezado + fila], { type: "text/csv" });
+    let enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(archivo);
+    enlace.download = "reservas.csv";
+    enlace.click();
+
+    document.getElementById("formulario").reset();
+});
+</script>
+
+</body>
+</html>
